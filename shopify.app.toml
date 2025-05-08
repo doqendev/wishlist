@@ -3,11 +3,11 @@
 client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
 name = "final-wishlist"
 handle = "final-wishlist"
-application_url = "https://sufficient-cool-clearly-pending.trycloudflare.com"
+application_url = "https://006c-2001-818-dab7-7400-551c-de55-24d3-9c50.ngrok-free.app"
 embedded = true
 
 [build]
-automatically_update_urls_on_dev = true
+automatically_update_urls_on_dev = false
 include_config_on_deploy = true
 
 [webhooks]
@@ -19,13 +19,13 @@ scopes = "read_customers,read_products"
 
 [auth]
 redirect_urls = [
-  "https://sufficient-cool-clearly-pending.trycloudflare.com/auth/callback",
-  "https://sufficient-cool-clearly-pending.trycloudflare.com/auth/shopify/callback",
-  "https://sufficient-cool-clearly-pending.trycloudflare.com/api/auth/callback"
+  "https://006c-2001-818-dab7-7400-551c-de55-24d3-9c50.ngrok-free.app/auth/callback",
+  "https://006c-2001-818-dab7-7400-551c-de55-24d3-9c50.ngrok-free.app/auth/shopify/callback",
+  "https://006c-2001-818-dab7-7400-551c-de55-24d3-9c50.ngrok-free.app/api/auth/callback"
 ]
 
 [app_proxy]
-url = "https://sufficient-cool-clearly-pending.trycloudflare.com/apps/wishlist"
+url     = "https://006c-2001-818-dab7-7400-551c-de55-24d3-9c50.ngrok-free.app/apps/wishlist"
 subpath = "wishlist"
 prefix = "apps"
 
