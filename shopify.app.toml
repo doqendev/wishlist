@@ -37,5 +37,6 @@ path = "extensions/wishlist-heart-embed"
 
 
 [app_proxy]
-  subpath = "wishlist"
-  subpath_prefix = "apps"
+subpath_prefix = "apps"
+subpath        = "wishlist"
+url            = "https://brief-till-newark-nebraska.trycloudflare.com/apps/wishlist"
