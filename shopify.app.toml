@@ -1,9 +1,9 @@
-# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
 
 client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
 name = "final-wishlist"
 handle = "final-wishlist"
-application_url = "https://vocabulary-jobs-whether-applications.trycloudflare.com"
+application_url = "https://pottery-checklist-accomplish-disc.trycloudflare.com"
 embedded = true
 
 [build]
@@ -15,13 +15,13 @@ api_version = "2025-04"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "read_products, read_customers"
 
 [auth]
 redirect_urls = [
-  "https://vocabulary-jobs-whether-applications.trycloudflare.com/auth/callback",
-  "https://vocabulary-jobs-whether-applications.trycloudflare.com/auth/shopify/callback",
-  "https://vocabulary-jobs-whether-applications.trycloudflare.com/api/auth/callback"
+  "https://pottery-checklist-accomplish-disc.trycloudflare.com/auth/callback",
+  "https://pottery-checklist-accomplish-disc.trycloudflare.com/auth/shopify/callback",
+  "https://pottery-checklist-accomplish-disc.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
