@@ -1,9 +1,9 @@
-# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
 
 client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
 name = "final-wishlist"
 handle = "final-wishlist"
-application_url = "https://merge-instrumental-source-yacht.trycloudflare.com"
+application_url = "https://roommate-ira-marina-lm.trycloudflare.com"
 embedded = true
 
 [webhooks]
@@ -15,9 +15,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://merge-instrumental-source-yacht.trycloudflare.com/auth/callback",
-  "https://merge-instrumental-source-yacht.trycloudflare.com/auth/shopify/callback",
-  "https://merge-instrumental-source-yacht.trycloudflare.com/api/auth/callback"
+  "https://roommate-ira-marina-lm.trycloudflare.com/auth/callback",
+  "https://roommate-ira-marina-lm.trycloudflare.com/auth/shopify/callback",
+  "https://roommate-ira-marina-lm.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
@@ -30,4 +30,4 @@ include_config_on_deploy = true
 [[extensions]]
 type = "theme_app_extension"
 name = "wishlist-heart-embed"
-path = "extensions/wishlist-embed"
+path = "extensions/wishlist-heart-embed"
