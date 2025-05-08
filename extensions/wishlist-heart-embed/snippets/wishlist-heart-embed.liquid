@@ -1,13 +1,15 @@
 {%- comment -%}
-  Expose assets + customerId
+  Only load the embed on storefront pages (not on our /apps/wishlist proxy)
 {%- endcomment -%}
-<script>
-  window.ShopifyAnalytics = window.ShopifyAnalytics || {};
-  window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};
-  window.ShopifyAnalytics.meta.customerId = {{ customer.id | json }};
-  window.__WishlistEmbedAssets = {
-    emptyHeart: "{{ 'heart-empty.svg' | asset_url }}",
-    fullHeart:  "{{ 'heart-full.svg'  | asset_url }}"
-  };
-</script>
-<script defer src="{{ 'wishlist-embed.js' | asset_url }}"></script>
+{% unless request.path contains '/apps/' %}
+  <script>
+    window.ShopifyAnalytics = window.ShopifyAnalytics || {};
+    window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};
+    window.ShopifyAnalytics.meta.customerId = {{ customer.id | json }};
+    window.__WishlistEmbedAssets = {
+      emptyHeart: "{{ 'heart-empty.svg' | asset_url }}",
+      fullHeart:  "{{ 'heart-full.svg'  | asset_url }}"
+    };
+  </script>
+  <script defer src="{{ 'wishlist-embed.js' | asset_url }}"></script>
+{% endunless %}

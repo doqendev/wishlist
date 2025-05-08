@@ -8,29 +8,19 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-/// Stores each wishlist entry: which shop, which customer, which product.
+/// Stores each wishlist entry: which shop, customer, and product.
 model Wishlist {
-  /// Auto-incrementing primary key
   id         Int      @id @default(autoincrement())
-
-  /// The shop’s myshopify domain (to support multi-shop installations)
   shop       String
-
-  /// The Shopify customer’s ID
   customerId String
-
-  /// The Shopify product’s ID
-  productId  String
-
-  /// When this entry was created
+  productId  Int
   createdAt  DateTime @default(now())
 
-  /// Prevent duplicates: a customer can only wishlist a given product once per shop
+  /// Prevent duplicates: a customer can only wishlist the same product once per shop
   @@unique([shop, customerId, productId])
 }

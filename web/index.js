@@ -8,12 +8,8 @@ import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import PrivacyWebhookHandlers from "./privacy.js";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Add Prisma
-// ─────────────────────────────────────────────────────────────────────────────
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-
 
 const PORT = parseInt(
   process.env.BACKEND_PORT || process.env.PORT || "3000",
@@ -27,7 +23,9 @@ const STATIC_PATH =
 
 const app = express();
 
-// Set up Shopify authentication and webhook handling
+// ─────────────────────────────────────────────────────────────────────────────
+// Shopify auth & webhooks
+// ─────────────────────────────────────────────────────────────────────────────
 app.get(shopify.config.auth.path, shopify.auth.begin());
 app.get(
   shopify.config.auth.callbackPath,
@@ -39,16 +37,15 @@ app.post(
   shopify.processWebhooks({ webhookHandlers: PrivacyWebhookHandlers })
 );
 
-// Protect all /api/* routes
+// ─────────────────────────────────────────────────────────────────────────────
+// Protect and parse
+// ─────────────────────────────────────────────────────────────────────────────
 app.use("/api/*", shopify.validateAuthenticatedSession());
-
-// Parse JSON bodies
 app.use(express.json());
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Existing sample routes
+// Sample product routes
 // ─────────────────────────────────────────────────────────────────────────────
-
 app.get("/api/products/count", async (_req, res) => {
   const client = new shopify.api.clients.Graphql({
     session: res.locals.shopify.session,
@@ -80,23 +77,19 @@ app.post("/api/products", async (_req, res) => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Wishlist endpoints
+// Wishlist API endpoints
 // ─────────────────────────────────────────────────────────────────────────────
-
 // GET  /api/wishlist?customerId=123
 app.get("/api/wishlist", async (req, res) => {
   try {
     const shop = res.locals.shopify.session.shop;
     const customerId = req.query.customerId;
-
     if (!customerId) {
       return res.status(400).json({ error: "Missing customerId" });
     }
-
     const items = await prisma.wishlist.findMany({
       where: { shop, customerId: String(customerId) },
     });
-
     return res.json({ success: true, items });
   } catch (err) {
     console.error("GET /api/wishlist error:", err);
@@ -105,24 +98,20 @@ app.get("/api/wishlist", async (req, res) => {
 });
 
 // POST /api/wishlist
-// body: { customerId, productId }
 app.post("/api/wishlist", async (req, res) => {
   try {
     const shop = res.locals.shopify.session.shop;
     const { customerId, productId } = req.body;
-
     if (!customerId || !productId) {
       return res.status(400).json({ error: "Missing parameters" });
     }
-
     const entry = await prisma.wishlist.create({
       data: { shop, customerId, productId },
     });
-
     return res.json({ success: true, entry });
   } catch (err) {
-    // Handle unique constraint violation (already added)
     if (err.code === "P2002") {
+      // unique constraint: already in wishlist
       return res
         .status(200)
         .json({ success: true, message: "Already in wishlist" });
@@ -133,20 +122,16 @@ app.post("/api/wishlist", async (req, res) => {
 });
 
 // DELETE /api/wishlist
-// body: { customerId, productId }
 app.delete("/api/wishlist", async (req, res) => {
   try {
     const shop = res.locals.shopify.session.shop;
     const { customerId, productId } = req.body;
-
     if (!customerId || !productId) {
       return res.status(400).json({ error: "Missing parameters" });
     }
-
     await prisma.wishlist.deleteMany({
       where: { shop, customerId, productId },
     });
-
     return res.json({ success: true });
   } catch (err) {
     console.error("DELETE /api/wishlist error:", err);
@@ -154,73 +139,72 @@ app.delete("/api/wishlist", async (req, res) => {
   }
 });
 
-
-// Serve the Wishlist page via App Proxy
+// ─────────────────────────────────────────────────────────────────────────────
+// App Proxy: My Wishlist page at /apps/wishlist
+// ─────────────────────────────────────────────────────────────────────────────
+// App Proxy: My Wishlist page at /apps/wishlist
 app.get(
   "/apps/wishlist",
-  shopify.validateAuthenticatedSession(),
-  async (req, res) => {
-    const customerId = res.locals.shopify.session.onlineAccessInfo.associated_user?.id
-      || window.ShopifyAnalytics.meta.customerId;
+  shopify.validateAuthenticatedSession(), // or shopify.processAppProxy() if you switch to that
+  async (req, res, next) => {
+    try {
+      const session = res.locals.shopify.session;
+      const shop = session.shop;
+      const customerId =
+        session.onlineAccessInfo.associated_user?.id.toString() || null;
+      console.log("📦 /apps/wishlist for", shop, "customer", customerId);
 
-    // Fetch the wishlist items from your SQLite via Prisma
-    const items = await prisma.wishlistItem.findMany({
-      where: { customerId: String(customerId) },
-      include: { product: true }, // assuming you link to a Product model
+      // FETCH from the correct model:
+      const entries = await prisma.wishlist.findMany({
+        where: { shop, customerId },
+      });
+
+      // Build list HTML
+      const listHtml = entries.length
+        ? entries
+            .map(
+              (e) => `
+            <li>
+              <a href="/products/${e.productHandle}">${e.productTitle}</a>
+              <button data-product-id="${e.productId}" class="remove">Remove</button>
+            </li>`
+            )
+            .join("")
+        : `<li>Your wishlist is empty.</li>`;
+
+      return res.send(`<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>My Wishlist</title></head>
+<body style="font-family:sans-serif;padding:2rem">
+  <h1>My Wishlist</h1>
+  <ul>${listHtml}</ul>
+  <script>
+    document.querySelectorAll('button.remove').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const pid = btn.dataset.productId;
+        await fetch('/api/wishlist', {
+          method:'DELETE',
+          credentials:'include',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ customerId: ${JSON.stringify(customerId)}, productId: pid })
+        });
+        btn.parentElement.remove();
+      });
     });
-
-    // Build simple HTML
-    let listHtml = items.length
-      ? items
-          .map(
-            (it) => `<li>
-                <a href="/products/${it.product.handle}">
-                  ${it.product.title}
-                </a>
-                <button data-product-id="${it.productId}" class="remove">Remove</button>
-              </li>`
-          )
-          .join("")
-      : "<li>Your wishlist is empty.</li>";
-
-    res.send(`
-      <!doctype html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>My Wishlist</title>
-          <style>
-            body { font-family: sans-serif; max-width:600px; margin:2rem auto; }
-            ul { list-style: none; padding:0; }
-            li { margin:1rem 0; display:flex; justify-content:space-between; }
-            button.remove { background: #c00; color:#fff; border:none; padding:0.5rem 1rem; cursor:pointer; }
-          </style>
-        </head>
-        <body>
-          <h1>My Wishlist</h1>
-          <ul>${listHtml}</ul>
-          <script>
-            document.querySelectorAll('button.remove').forEach(btn => {
-              btn.addEventListener('click', async () => {
-                const id = btn.getAttribute('data-product-id');
-                await fetch('/api/wishlist', {
-                  method: 'DELETE',
-                  credentials: 'include',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ customerId: '${customerId}', productId: id })
-                });
-                btn.parentElement.remove();
-              });
-            });
-          </script>
-        </body>
-      </html>
-    `);
+  </script>
+</body>
+</html>`);
+    } catch (err) {
+      console.error("❌ Error in /apps/wishlist:", err);
+      return next(err);
+    }
   }
 );
 
-// ─────────────────────────────────────────────────────────────────────────────
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Serve frontend & catch-all
+// ─────────────────────────────────────────────────────────────────────────────
 app.use(shopify.cspHeaders());
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
@@ -235,4 +219,6 @@ app.use("/*", shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
     );
 });
 
-app.listen(PORT);
+app.listen(PORT, () =>
+  console.log(`> Server is listening on http://localhost:${PORT}`)
+);

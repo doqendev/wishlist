@@ -3,7 +3,7 @@
 client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
 name = "final-wishlist"
 handle = "final-wishlist"
-application_url = "https://saskatchewan-each-handbook-intense.trycloudflare.com"
+application_url = "https://sufficient-cool-clearly-pending.trycloudflare.com"
 embedded = true
 
 [build]
@@ -19,10 +19,15 @@ scopes = "read_customers,read_products"
 
 [auth]
 redirect_urls = [
-  "https://saskatchewan-each-handbook-intense.trycloudflare.com/auth/callback",
-  "https://saskatchewan-each-handbook-intense.trycloudflare.com/auth/shopify/callback",
-  "https://saskatchewan-each-handbook-intense.trycloudflare.com/api/auth/callback"
+  "https://sufficient-cool-clearly-pending.trycloudflare.com/auth/callback",
+  "https://sufficient-cool-clearly-pending.trycloudflare.com/auth/shopify/callback",
+  "https://sufficient-cool-clearly-pending.trycloudflare.com/api/auth/callback"
 ]
+
+[app_proxy]
+url = "https://sufficient-cool-clearly-pending.trycloudflare.com/apps/wishlist"
+subpath = "wishlist"
+prefix = "apps"
 
 [pos]
 embedded = false
@@ -31,9 +36,3 @@ embedded = false
 type = "theme_app_extension"
 name = "wishlist-heart-embed"
 path = "extensions/wishlist-heart-embed"
-
-[app_proxy]
-prefix  = "apps"
-subpath = "wishlist"
-url     = "https://5dd5-2001-818-dab7-7400-551c-de55-24d3-9c50.ngrok-free.app/apps/wishlist"
-
