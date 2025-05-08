@@ -1,10 +1,14 @@
-
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
 name = "final-wishlist"
 handle = "final-wishlist"
-application_url = "https://roommate-ira-marina-lm.trycloudflare.com"
+application_url = "https://analyst-arnold-condition-rod.trycloudflare.com"
 embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+include_config_on_deploy = true
 
 [webhooks]
 api_version = "2025-04"
@@ -15,17 +19,13 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://roommate-ira-marina-lm.trycloudflare.com/auth/callback",
-  "https://roommate-ira-marina-lm.trycloudflare.com/auth/shopify/callback",
-  "https://roommate-ira-marina-lm.trycloudflare.com/api/auth/callback"
+  "https://analyst-arnold-condition-rod.trycloudflare.com/auth/callback",
+  "https://analyst-arnold-condition-rod.trycloudflare.com/auth/shopify/callback",
+  "https://analyst-arnold-condition-rod.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
 embedded = false
-
-[build]
-automatically_update_urls_on_dev = true
-include_config_on_deploy = true
 
 [[extensions]]
 type = "theme_app_extension"
