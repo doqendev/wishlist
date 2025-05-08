@@ -3,7 +3,7 @@
 client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
 name = "final-wishlist"
 handle = "final-wishlist"
-application_url = "https://analyst-arnold-condition-rod.trycloudflare.com"
+application_url = "https://vocabulary-jobs-whether-applications.trycloudflare.com"
 embedded = true
 
 [build]
@@ -19,9 +19,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://analyst-arnold-condition-rod.trycloudflare.com/auth/callback",
-  "https://analyst-arnold-condition-rod.trycloudflare.com/auth/shopify/callback",
-  "https://analyst-arnold-condition-rod.trycloudflare.com/api/auth/callback"
+  "https://vocabulary-jobs-whether-applications.trycloudflare.com/auth/callback",
+  "https://vocabulary-jobs-whether-applications.trycloudflare.com/auth/shopify/callback",
+  "https://vocabulary-jobs-whether-applications.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
