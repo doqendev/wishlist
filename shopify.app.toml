@@ -3,7 +3,7 @@
 client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
 name = "final-wishlist"
 handle = "final-wishlist"
-application_url = "https://brief-till-newark-nebraska.trycloudflare.com"
+application_url = "https://merge-instrumental-source-yacht.trycloudflare.com"
 embedded = true
 
 [webhooks]
@@ -15,9 +15,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://brief-till-newark-nebraska.trycloudflare.com/auth/callback",
-  "https://brief-till-newark-nebraska.trycloudflare.com/auth/shopify/callback",
-  "https://brief-till-newark-nebraska.trycloudflare.com/api/auth/callback"
+  "https://merge-instrumental-source-yacht.trycloudflare.com/auth/callback",
+  "https://merge-instrumental-source-yacht.trycloudflare.com/auth/shopify/callback",
+  "https://merge-instrumental-source-yacht.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
@@ -25,6 +25,7 @@ embedded = false
 
 [build]
 automatically_update_urls_on_dev = true
+include_config_on_deploy = true
 
 [[extensions]]
 type = "theme_app_extension"

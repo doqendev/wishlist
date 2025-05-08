@@ -1,8 +1,3 @@
-# Human‑readable name in the theme editor
 name = "Wishlist Heart Embed"
-
-# Must be this for an App Embed
 type = "theme_app_extension"
-
-# This is the embed extension point
 extension_points = ["theme_app_extension"]
