@@ -1,93 +1,104 @@
 document.addEventListener('DOMContentLoaded', () => {
   const customerId = window.ShopifyAnalytics.meta.customerId || null;
-  const cache = {};
+  const { emptyHeart, fullHeart } = window.__WishlistEmbedAssets || {};
 
-  // Find every product link
-  document.querySelectorAll('a[href*="/products/"]').forEach(anchor => {
-    // Extract the handle
-    const match = anchor.pathname.match(/^\/products\/([^\/]+)/);
-    if (!match) return;
-    const handle = match[1];
-    if (!handle) return;
-
-    // Prevent duplicate containers per handle
-    if (cache[handle] && cache[handle].container) {
-      // append same container to this card
-      const clone = cache[handle].container.cloneNode(true);
-      attachToCard(anchor, clone, cache[handle].productId);
-      return;
-    }
-
-    // Fetch product JSON to get the ID
-    fetch(`/products/${handle}.js`)
-      .then(r => r.json())
-      .then(json => {
-        const productId = json.id;
-        // build the heart container once
-        const container = buildContainer(productId, customerId);
-        cache[handle] = { productId, container };
-
-        // attach it to *this* card
-        attachToCard(anchor, container, productId);
-      })
-      .catch(() => {
-        // ignore failures
-      });
-  });
-
-  function buildContainer(productId, customerId) {
-    const emptySVG = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"><path d="M12 21s-8-6.58-8-11a6 6 0 0112 0c0 4.42-8 11-8 11z"/></svg>';
-    const fullSVG  = '<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 21s-8-6.58-8-11a6 6 0 0112 0c0 4.42-8 11-8 11z"/></svg>';
+  // Helper: create a heart container for a given productId
+  function createHeartContainer(productId) {
     const container = document.createElement('div');
     container.style.position = 'absolute';
-    container.style.bottom = '8px';
-    container.style.right  = '8px';
-    container.style.cursor = 'pointer';
-    container.style.zIndex = '2';
+    container.style.bottom   = '8px';
+    container.style.right    = '8px';
+    container.style.cursor   = 'pointer';
+    container.style.zIndex   = '2';
 
-    const updateIcon = (filled) => {
-      container.innerHTML = filled ? fullSVG : emptySVG;
-    };
+    // Use an <img> so we can swap src easily
+    const img = document.createElement('img');
+    img.src = emptyHeart;
+    img.width = 24;
+    img.height = 24;
+    container.appendChild(img);
 
-    container.addEventListener('click', async e => {
-      e.preventDefault(); e.stopPropagation();
+    // Toggle SVG
+    function updateIcon(filled) {
+      img.src = filled ? fullHeart : emptyHeart;
+    }
+
+    // Click handler
+    container.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       if (!customerId) {
         window.location.href = `/account/login?return_url=${encodeURIComponent(location.href)}`;
         return;
       }
-      const isFilled = container.querySelector('svg').getAttribute('fill') === 'currentColor';
-      const method = isFilled ? 'DELETE' : 'POST';
+      const filled = img.src === fullHeart;
+      const method = filled ? 'DELETE' : 'POST';
       await fetch('/api/wishlist', {
         method,
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customerId, productId })
+        body: JSON.stringify({ customerId, productId }),
       });
-      updateIcon(!isFilled);
+      updateIcon(!filled);
     });
 
-    // initialize state
+    // Initialize fill state
     if (customerId) {
       fetch(`/api/wishlist?customerId=${customerId}`, { credentials: 'include' })
         .then(r => r.json())
         .then(data => {
-          const inList = data.items.some(i => i.productId === productId);
-          updateIcon(inList);
+          const inWishlist = data.items.some(i => i.productId === productId);
+          updateIcon(inWishlist);
         });
-    } else {
-      updateIcon(false);
     }
 
     return container;
   }
 
-  function attachToCard(anchor, container, productId) {
-    // find a wrapper to attach to
-    const wrapper = anchor.closest('div,article') || anchor.parentElement;
-    if (!wrapper) return;
-    if (!wrapper.style.position) wrapper.style.position = 'relative';
-    // clone the container for each card
-    const clone = container.cloneNode(true);
-    wrapper.appendChild(clone);
-  }
+  // Attach hearts to every product-card link
+  document.querySelectorAll('a[href*="/products/"]').forEach(anchor => {
+    const m = anchor.pathname.match(/^\/products\/([^\/]+)/);
+    if (!m) return;
+    const handle = m[1];
+
+    // Fetch product JSON once per handle
+    fetch(`/products/${handle}.js`)
+      .then(r => r.json())
+      .then(json => {
+        const productId = json.id;
+        // Create the container
+        const heart = createHeartContainer(productId);
+
+        // Find the card wrapper: usually <article> or <div class="card-wrapper">
+        const wrapper = anchor.closest('article, .card-wrapper, li') || anchor.parentElement;
+        if (!wrapper) return;
+
+        // Ensure the wrapper is positioned
+        const st = window.getComputedStyle(wrapper).position;
+        if (st === 'static') wrapper.style.position = 'relative';
+
+        // Append *one* heart per card
+        wrapper.appendChild(heart);
+      })
+      .catch(() => {});
+  });
 });
+
+// === Inject "My Wishlist" into customer-account nav ===
+if (location.pathname.startsWith('/account')) {
+  document.addEventListener('DOMContentLoaded', () => {
+    // Adjust the selector to match Dawn's account-nav
+    const nav = document.querySelector('.account-layout__navigation nav');
+    if (!nav) return;
+    // Only add once
+    if (nav.querySelector('a[href="/apps/wishlist"]')) return;
+
+    const li = document.createElement('div');
+    li.innerHTML = `
+      <a href="/apps/wishlist" class="ui-link">Wishlist</a>
+    `;
+    // Style as needed:
+    li.style.marginTop = '1rem';
+    nav.appendChild(li);
+  });
+}

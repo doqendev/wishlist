@@ -3,7 +3,7 @@
 client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
 name = "final-wishlist"
 handle = "final-wishlist"
-application_url = "https://court-retrieved-derby-silicon.trycloudflare.com"
+application_url = "https://balloon-appearance-jessica-bailey.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,11 +17,14 @@ api_version = "2025-04"
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 scopes = "read_customers,read_products"
 
+
+
+
 [auth]
 redirect_urls = [
-  "https://court-retrieved-derby-silicon.trycloudflare.com/auth/callback",
-  "https://court-retrieved-derby-silicon.trycloudflare.com/auth/shopify/callback",
-  "https://court-retrieved-derby-silicon.trycloudflare.com/api/auth/callback"
+  "https://balloon-appearance-jessica-bailey.trycloudflare.com/auth/callback",
+  "https://balloon-appearance-jessica-bailey.trycloudflare.com/auth/shopify/callback",
+  "https://balloon-appearance-jessica-bailey.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
@@ -31,3 +34,8 @@ embedded = false
 type = "theme_app_extension"
 name = "wishlist-heart-embed"
 path = "extensions/wishlist-heart-embed"
+
+
+[app_proxy]
+  subpath = "wishlist"
+  subpath_prefix = "apps"

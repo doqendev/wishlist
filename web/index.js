@@ -154,6 +154,71 @@ app.delete("/api/wishlist", async (req, res) => {
   }
 });
 
+
+// Serve the Wishlist page via App Proxy
+app.get(
+  "/apps/wishlist",
+  shopify.validateAuthenticatedSession(),
+  async (req, res) => {
+    const customerId = res.locals.shopify.session.onlineAccessInfo.associated_user?.id
+      || window.ShopifyAnalytics.meta.customerId;
+
+    // Fetch the wishlist items from your SQLite via Prisma
+    const items = await prisma.wishlistItem.findMany({
+      where: { customerId: String(customerId) },
+      include: { product: true }, // assuming you link to a Product model
+    });
+
+    // Build simple HTML
+    let listHtml = items.length
+      ? items
+          .map(
+            (it) => `<li>
+                <a href="/products/${it.product.handle}">
+                  ${it.product.title}
+                </a>
+                <button data-product-id="${it.productId}" class="remove">Remove</button>
+              </li>`
+          )
+          .join("")
+      : "<li>Your wishlist is empty.</li>";
+
+    res.send(`
+      <!doctype html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>My Wishlist</title>
+          <style>
+            body { font-family: sans-serif; max-width:600px; margin:2rem auto; }
+            ul { list-style: none; padding:0; }
+            li { margin:1rem 0; display:flex; justify-content:space-between; }
+            button.remove { background: #c00; color:#fff; border:none; padding:0.5rem 1rem; cursor:pointer; }
+          </style>
+        </head>
+        <body>
+          <h1>My Wishlist</h1>
+          <ul>${listHtml}</ul>
+          <script>
+            document.querySelectorAll('button.remove').forEach(btn => {
+              btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-product-id');
+                await fetch('/api/wishlist', {
+                  method: 'DELETE',
+                  credentials: 'include',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ customerId: '${customerId}', productId: id })
+                });
+                btn.parentElement.remove();
+              });
+            });
+          </script>
+        </body>
+      </html>
+    `);
+  }
+);
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 app.use(shopify.cspHeaders());
