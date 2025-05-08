@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Stores each wishlist entry: which shop, which customer, which product.
+model Wishlist {
+  /// Auto-incrementing primary key
+  id         Int      @id @default(autoincrement())
+
+  /// The shop’s myshopify domain (to support multi-shop installations)
+  shop       String
+
+  /// The Shopify customer’s ID
+  customerId String
+
+  /// The Shopify product’s ID
+  productId  String
+
+  /// When this entry was created
+  createdAt  DateTime @default(now())
+
+  /// Prevent duplicates: a customer can only wishlist a given product once per shop
+  @@unique([shop, customerId, productId])
+}

@@ -1,0 +1,32 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
+name = "final-wishlist"
+handle = "final-wishlist"
+application_url = "https://brief-till-newark-nebraska.trycloudflare.com"
+embedded = true
+
+[webhooks]
+api_version = "2025-04"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://brief-till-newark-nebraska.trycloudflare.com/auth/callback",
+  "https://brief-till-newark-nebraska.trycloudflare.com/auth/shopify/callback",
+  "https://brief-till-newark-nebraska.trycloudflare.com/api/auth/callback"
+]
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+
+[[extensions]]
+type = "theme_app_extension"
+name = "wishlist-heart-embed"
+path = "extensions/wishlist-embed"

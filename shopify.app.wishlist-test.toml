@@ -1,0 +1,28 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "07dfea4da82f754bac41dbbe68ca3fd1"
+name = "wishlist-test"
+handle = "wishlist-test-53"
+application_url = "https://pointed-denmark-dc-strip.trycloudflare.com"
+embedded = true
+
+[build]
+include_config_on_deploy = true
+automatically_update_urls_on_dev = true
+
+[webhooks]
+api_version = "2025-04"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://pointed-denmark-dc-strip.trycloudflare.com/auth/callback",
+  "https://pointed-denmark-dc-strip.trycloudflare.com/auth/shopify/callback",
+  "https://pointed-denmark-dc-strip.trycloudflare.com/api/auth/callback"
+]
+
+[pos]
+embedded = false

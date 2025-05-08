@@ -1,0 +1,9 @@
+<script>
+  window.ShopifyAnalytics = window.ShopifyAnalytics || {};
+  window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};
+  window.ShopifyAnalytics.meta.customerId = {{ customer.id | json }};
+</script>
+<script
+  defer
+  src="{{ 'wishlist-embed.js' | asset_url }}"
+></script>
