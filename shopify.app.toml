@@ -3,7 +3,7 @@
 client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
 name = "final-wishlist"
 handle = "final-wishlist"
-application_url = "https://fundamental-vg-fax-coast.trycloudflare.com"
+application_url = "https://court-retrieved-derby-silicon.trycloudflare.com"
 embedded = true
 
 [build]
@@ -19,9 +19,9 @@ scopes = "read_customers,read_products"
 
 [auth]
 redirect_urls = [
-  "https://fundamental-vg-fax-coast.trycloudflare.com/auth/callback",
-  "https://fundamental-vg-fax-coast.trycloudflare.com/auth/shopify/callback",
-  "https://fundamental-vg-fax-coast.trycloudflare.com/api/auth/callback"
+  "https://court-retrieved-derby-silicon.trycloudflare.com/auth/callback",
+  "https://court-retrieved-derby-silicon.trycloudflare.com/auth/shopify/callback",
+  "https://court-retrieved-derby-silicon.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
