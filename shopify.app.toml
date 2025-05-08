@@ -3,7 +3,7 @@
 client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
 name = "final-wishlist"
 handle = "final-wishlist"
-application_url = "https://regional-westminster-cos-fellowship.trycloudflare.com"
+application_url = "https://fundamental-vg-fax-coast.trycloudflare.com"
 embedded = true
 
 [build]
@@ -15,13 +15,13 @@ api_version = "2025-04"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_products, read_customers"
+scopes = "read_customers,read_products"
 
 [auth]
 redirect_urls = [
-  "https://regional-westminster-cos-fellowship.trycloudflare.com/auth/callback",
-  "https://regional-westminster-cos-fellowship.trycloudflare.com/auth/shopify/callback",
-  "https://regional-westminster-cos-fellowship.trycloudflare.com/api/auth/callback"
+  "https://fundamental-vg-fax-coast.trycloudflare.com/auth/callback",
+  "https://fundamental-vg-fax-coast.trycloudflare.com/auth/shopify/callback",
+  "https://fundamental-vg-fax-coast.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
