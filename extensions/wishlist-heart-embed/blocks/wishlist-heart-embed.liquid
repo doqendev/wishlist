@@ -1,0 +1,18 @@
+{%- comment -%}
+  This App Embed Block injects our snippet at page load.
+{%- endcomment -%}
+
+{% render 'wishlist-heart-embed' %}
+
+{% schema %}
+{
+  "name": "Wishlist Heart Embed",
+  "target": "body",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Default"
+    }
+  ]
+}
+{% endschema %}

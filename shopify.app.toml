@@ -1,9 +1,9 @@
-
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "80f95c8bd0c0b14f20372391d1b2b17b"
 name = "final-wishlist"
 handle = "final-wishlist"
-application_url = "https://pottery-checklist-accomplish-disc.trycloudflare.com"
+application_url = "https://regional-westminster-cos-fellowship.trycloudflare.com"
 embedded = true
 
 [build]
@@ -19,9 +19,9 @@ scopes = "read_products, read_customers"
 
 [auth]
 redirect_urls = [
-  "https://pottery-checklist-accomplish-disc.trycloudflare.com/auth/callback",
-  "https://pottery-checklist-accomplish-disc.trycloudflare.com/auth/shopify/callback",
-  "https://pottery-checklist-accomplish-disc.trycloudflare.com/api/auth/callback"
+  "https://regional-westminster-cos-fellowship.trycloudflare.com/auth/callback",
+  "https://regional-westminster-cos-fellowship.trycloudflare.com/auth/shopify/callback",
+  "https://regional-westminster-cos-fellowship.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
